@@ -1,6 +1,6 @@
 # Fluent::Plugin::Azureeventhubs
 
-TODO: Write a gem description
+Azure Event Hubs buffered output plugin for Fluentd.
 
 ## Installation
 
@@ -18,9 +18,20 @@ Or install it yourself as:
 
     $ gem install fluent-plugin-azureeventhubs
 
-## Usage
+## Configuration
 
-TODO: Write usage instructions here
+```
+<match pattern>
+  type azureeventhubs_buffered
+
+  connection_string <Paste SAS connection string from Azure Management Potal>
+  hub_name          <Name of Event Hubs>
+  include_tag       (true|false) # true: Include tag into record [Optional: default => false]
+  include_time      (true|false) # true: Include time into record [Optional: default => false]
+  tag_time_name     record_time  # record tag for time when include_time sets true. [Optional: default => 'time']
+  type              (https|amqps) # Connection type. [Optional: default => https]. Note that amqps is not implementated.
+</match>
+```
 
 ## Contributing
 
