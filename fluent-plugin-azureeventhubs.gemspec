@@ -7,8 +7,8 @@ Gem::Specification.new do |spec|
   spec.version       = "0.0.1"
   spec.authors       = ["Hidemasa Togashi"]
   spec.email         = ["togachiro@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = "Fluentd output plugin for Azure Event Hubs"
+  spec.description   = "Fluentd output plugin for Azure Event Hubs"
   spec.homepage      = ""
   spec.license       = "MIT"
 
