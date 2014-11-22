@@ -34,7 +34,6 @@ class AzureEventHubsHttpSender
     signature = CGI.escape(Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), @sas_key_value, to_sign)).strip())
 
     token = "SharedAccessSignature sr=#{target_uri}&sig=#{signature}&se=#{expires}&skn=#{@sas_key_name}"
-    p token
     return token
   end
 
@@ -48,10 +47,8 @@ class AzureEventHubsHttpSender
     }
     https = Net::HTTP.new(@uri.host, @uri.port)
     https.use_ssl = true
-    #req = Net::HTTP::Post.new("#{@hub_name}/messages", initheader = {'Content-Type' => 'application/atom+xml;type=entry;charset=utf-8', 'Authorization' => token})
     req = Net::HTTP::Post.new(@uri.request_uri, headers)
     req.body = payload.to_json
     res = https.request(req)
-    p res.to_s
   end
 end
