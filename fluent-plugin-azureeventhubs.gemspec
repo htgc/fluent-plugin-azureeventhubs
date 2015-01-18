@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["togachiro@gmail.com"]
   spec.summary       = "Fluentd output plugin for Azure Event Hubs"
   spec.description   = "Fluentd output plugin for Azure Event Hubs"
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/htgc/fluent-plugin-azureeventhubs"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
