@@ -30,6 +30,7 @@ Or install it yourself as:
   include_time      (true|false) # true: Include time into record [Optional: default => false]
   tag_time_name     record_time  # record tag for time when include_time sets true. [Optional: default => 'time']
   type              (https|amqps) # Connection type. [Optional: default => https]. Note that amqps is not implementated.
+  expiry_interval   <Integer number> # Signature expiration time interval in seconds. [Optional: default => 3600 (60min)]
 </match>
 ```
 

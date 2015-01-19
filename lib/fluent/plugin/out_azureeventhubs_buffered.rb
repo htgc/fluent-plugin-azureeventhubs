@@ -8,7 +8,7 @@
     config_param :include_tag, :bool, :default => false
     config_param :include_time, :bool, :default => false
     config_param :tag_time_name, :string, :default => 'time'
-    config_param :expires_mins, :integer, :default => 3600 # 60min
+    config_param :expiry_interval, :integer, :default => 3600 # 60min
     config_param :type, :string, :default => 'https' # https / amqps (Not Implemented) 
 
     def configure(conf)
@@ -18,7 +18,7 @@
         raise NotImplementedError
       else
         require_relative 'azureeventhubs/http'
-        @sender = AzureEventHubsHttpSender.new(@connection_string, @hub_name)
+        @sender = AzureEventHubsHttpSender.new(@connection_string, @hub_name, @expiry_interval)
       end
     end
 

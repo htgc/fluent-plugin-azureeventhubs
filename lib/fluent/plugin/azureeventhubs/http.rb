@@ -1,6 +1,6 @@
 
 class AzureEventHubsHttpSender
-  def initialize(connection_string, hub_name)
+  def initialize(connection_string, hub_name, expiry=3600)
     require 'openssl'
     require 'base64'
     require 'net/http'
@@ -9,7 +9,7 @@ class AzureEventHubsHttpSender
     require 'time'
     @connection_string = connection_string
     @hub_name = hub_name
-    @expires_in_mins = 3600
+    @expiry_interval = expiry
 
     if @connection_string.count(';') != 2
       raise "Connection String format is not correct"
@@ -29,11 +29,11 @@ class AzureEventHubsHttpSender
 
   def generate_sas_token(uri)
     target_uri = CGI.escape(uri.downcase).downcase
-    expires = Time.now.to_i + @expires_in_mins
-    to_sign = "#{target_uri}\n#{expires}";
+    expiry = Time.now.to_i + @expiry_interval
+    to_sign = "#{target_uri}\n#{expiry}";
     signature = CGI.escape(Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), @sas_key_value, to_sign)).strip())
 
-    token = "SharedAccessSignature sr=#{target_uri}&sig=#{signature}&se=#{expires}&skn=#{@sas_key_name}"
+    token = "SharedAccessSignature sr=#{target_uri}&sig=#{signature}&se=#{expiry}&skn=#{@sas_key_name}"
     return token
   end
 
