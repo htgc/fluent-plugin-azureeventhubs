@@ -31,6 +31,8 @@ Or install it yourself as:
   tag_time_name     record_time  # record tag for time when include_time sets true. [Optional: default => 'time']
   type              (https|amqps) # Connection type. [Optional: default => https]. Note that amqps is not implementated.
   expiry_interval   <Integer number> # Signature expiration time interval in seconds. [Optional: default => 3600 (60min)]
+  proxy_addr       <Host or IP> # Address of the proxy [Optional]
+  proxy_port	   <Integer>   # Proxy port. [Optional: default => 3128]
 </match>
 ```
 

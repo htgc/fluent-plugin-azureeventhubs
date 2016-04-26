@@ -1,6 +1,6 @@
 
 class AzureEventHubsHttpSender
-  def initialize(connection_string, hub_name, expiry=3600)
+  def initialize(connection_string, hub_name, expiry=3600,proxy_addr='',proxy_port=3128)
     require 'openssl'
     require 'base64'
     require 'net/http'
@@ -10,6 +10,8 @@ class AzureEventHubsHttpSender
     @connection_string = connection_string
     @hub_name = hub_name
     @expiry_interval = expiry
+    @proxy_addr = proxy_addr
+    @proxy_port = proxy_port
 
     if @connection_string.count(';') != 2
       raise "Connection String format is not correct"
@@ -45,7 +47,11 @@ class AzureEventHubsHttpSender
       'Content-Type' => 'application/atom+xml;type=entry;charset=utf-8',
       'Authorization' => token
     }
-    https = Net::HTTP.new(@uri.host, @uri.port)
+    if (@proxy_addr.to_s.empty?)
+    	https = Net::HTTP.new(@uri.host, @uri.port)
+    else
+    	https = Net::HTTP.new(@uri.host, @uri.port,@proxy_addr,@proxy_port)
+    end
     https.use_ssl = true
     req = Net::HTTP::Post.new(@uri.request_uri, headers)
     req.body = payload.to_json
