@@ -1,6 +1,6 @@
 
 class AzureEventHubsHttpSender
-  def initialize(connection_string, hub_name, expiry=3600,proxy_addr='',proxy_port=3128)
+  def initialize(connection_string, hub_name, expiry=3600,proxy_addr='',proxy_port=3128,open_timeout=60,read_timeout=60)
     require 'openssl'
     require 'base64'
     require 'net/http'
@@ -12,6 +12,8 @@ class AzureEventHubsHttpSender
     @expiry_interval = expiry
     @proxy_addr = proxy_addr
     @proxy_port = proxy_port
+    @open_timeout = open_timeout
+    @read_timeout = read_timeout
 
     if @connection_string.count(';') != 2
       raise "Connection String format is not correct"
@@ -49,12 +51,17 @@ class AzureEventHubsHttpSender
     }
     if (@proxy_addr.to_s.empty?)
     	https = Net::HTTP.new(@uri.host, @uri.port)
+        https.open_timeout = @open_timeout
+        https.read_timeout = @read_timeout
     else
     	https = Net::HTTP.new(@uri.host, @uri.port,@proxy_addr,@proxy_port)
+        https.open_timeout = @open_timeout
+        https.read_timeout = @read_timeout
     end
     https.use_ssl = true
     req = Net::HTTP::Post.new(@uri.request_uri, headers)
     req.body = payload.to_json
     res = https.request(req)
+    rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Errno::ETIMEDOUT, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
   end
 end
