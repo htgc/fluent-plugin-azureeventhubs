@@ -12,6 +12,8 @@
     config_param :type, :string, :default => 'https' # https / amqps (Not Implemented) 
     config_param :proxy_addr, :string, :default => ''
     config_param :proxy_port, :integer,:default => 3128
+    config_param :open_timeout, :integer,:default => 60
+    config_param :read_timeout, :integer,:default => 60
 
     def configure(conf)
       super
@@ -20,7 +22,7 @@
         raise NotImplementedError
       else
         require_relative 'azureeventhubs/http'
-        @sender = AzureEventHubsHttpSender.new(@connection_string, @hub_name, @expiry_interval,@proxy_addr,@proxy_port)
+        @sender = AzureEventHubsHttpSender.new(@connection_string, @hub_name, @expiry_interval,@proxy_addr,@proxy_port,@open_timeout,@read_timeout)
       end
     end
 
