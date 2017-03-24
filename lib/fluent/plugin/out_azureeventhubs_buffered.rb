@@ -14,6 +14,7 @@
     config_param :proxy_port, :integer,:default => 3128
     config_param :open_timeout, :integer,:default => 60
     config_param :read_timeout, :integer,:default => 60
+    config_param :message_properties, :hash, :default => nil
 
     def configure(conf)
       super
@@ -39,7 +40,7 @@
         if @include_time
           record[@tag_time_name] = time
         end
-        @sender.send(record)
+        @sender.send_w_properties(record, @message_properties)
       }
     end
   end
