@@ -15,7 +15,7 @@
     config_param :open_timeout, :integer,:default => 60
     config_param :read_timeout, :integer,:default => 60
 
-    def configure(conf)
+   def configure(conf)
       super
       case @type
       when 'amqps'
@@ -44,4 +44,3 @@
     end
   end
 #end
-
