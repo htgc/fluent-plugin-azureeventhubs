@@ -35,6 +35,7 @@ Or install it yourself as:
   proxy_port	   <Integer>   # Proxy port. [Optional: default => 3128]
   read_timeout     <Integer>   # HTTP Read timeout in seconds[Optional: default => 60]
   open_timeout     <Integer>   # HTTP Open timeout in seconds[Optional: default => 60]
+  message_properties <Json Object> # A json object of key/value pairs to add Properties to the events being sent to EventHubs [Optional: default => nil]
 </match>
 ```
 

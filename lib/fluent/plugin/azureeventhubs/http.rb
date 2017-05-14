@@ -44,11 +44,18 @@ class AzureEventHubsHttpSender
   private :generate_sas_token
 
   def send(payload)
+    send_w_properties(payload, nil)
+  end
+
+  def send_w_properties(payload, properties)
     token = generate_sas_token(@uri.to_s)
     headers = {
       'Content-Type' => 'application/atom+xml;type=entry;charset=utf-8',
       'Authorization' => token
     }
+    if not properties.nil?
+      headers = headers.merge(properties)
+    end
     if (@proxy_addr.to_s.empty?)
     	https = Net::HTTP.new(@uri.host, @uri.port)
         https.open_timeout = @open_timeout
