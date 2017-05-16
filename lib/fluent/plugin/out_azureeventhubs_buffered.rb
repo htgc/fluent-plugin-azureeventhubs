@@ -42,6 +42,10 @@ module Fluent::Plugin
       [tag, time, record].to_msgpack
     end
 
+    def formatted_to_msgpack_binary?
+      true
+    end
+
     def write(chunk)
       chunk.msgpack_each { |tag, time, record|
         p record.to_s
