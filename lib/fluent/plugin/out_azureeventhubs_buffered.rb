@@ -3,7 +3,7 @@ module Fluent::Plugin
   class AzureEventHubsOutputBuffered < Output
     Fluent::Plugin.register_output('azureeventhubs_buffered', self)
 
-    helpers :compat_parameters
+    helpers :compat_parameters, :inject
 
     DEFAULT_BUFFER_TYPE = "memory"
 
@@ -26,7 +26,7 @@ module Fluent::Plugin
     end
 
     def configure(conf)
-      compat_parameters_convert(conf, :buffer)
+      compat_parameters_convert(conf, :buffer, :inject)
       super
       case @type
       when 'amqps'
@@ -38,6 +38,7 @@ module Fluent::Plugin
     end
 
     def format(tag, time, record)
+      record = inject_values_to_record(tag, time, record)
       [tag, time, record].to_msgpack
     end
 
