@@ -33,6 +33,8 @@ Or install it yourself as:
   expiry_interval   <Integer number> # Signature expiration time interval in seconds. [Optional: default => 3600 (60min)]
   proxy_addr       <Host or IP> # Address of the proxy [Optional]
   proxy_port	   <Integer>   # Proxy port. [Optional: default => 3128]
+  proxy_user       <Username>  # Proxy username
+  proxy_pass       <Password>  # Proxy password
   read_timeout     <Integer>   # HTTP Read timeout in seconds[Optional: default => 60]
   open_timeout     <Integer>   # HTTP Open timeout in seconds[Optional: default => 60]
   message_properties <Json Object> # A json object of key/value pairs to add Properties to the events being sent to EventHubs [Optional: default => nil]
