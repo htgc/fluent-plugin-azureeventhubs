@@ -1,6 +1,6 @@
 
 class AzureEventHubsHttpSender
-  def initialize(connection_string, hub_name, expiry=3600,proxy_addr='',proxy_port=3128,open_timeout=60,read_timeout=60)
+  def initialize(connection_string, hub_name, expiry=3600,proxy_addr='',proxy_port=3128,proxy_user='',proxy_pass='',open_timeout=60,read_timeout=60)
     require 'openssl'
     require 'base64'
     require 'net/http'
@@ -12,6 +12,8 @@ class AzureEventHubsHttpSender
     @expiry_interval = expiry
     @proxy_addr = proxy_addr
     @proxy_port = proxy_port
+    @proxy_user = proxy_user
+    @proxy_pass = proxy_pass
     @open_timeout = open_timeout
     @read_timeout = read_timeout
 
@@ -61,7 +63,7 @@ class AzureEventHubsHttpSender
         https.open_timeout = @open_timeout
         https.read_timeout = @read_timeout
     else
-    	https = Net::HTTP.new(@uri.host, @uri.port,@proxy_addr,@proxy_port)
+    	https = Net::HTTP.new(@uri.host, @uri.port,@proxy_addr,@proxy_port,@proxy_user,@proxy_pass)
         https.open_timeout = @open_timeout
         https.read_timeout = @read_timeout
     end
