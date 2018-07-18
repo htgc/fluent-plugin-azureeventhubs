@@ -16,6 +16,8 @@ module Fluent::Plugin
     config_param :type, :string, :default => 'https' # https / amqps (Not Implemented)
     config_param :proxy_addr, :string, :default => ''
     config_param :proxy_port, :integer,:default => 3128
+    config_param :proxy_user, :string, :default => ''
+    config_param :proxy_pass, :string, :default => ''
     config_param :open_timeout, :integer,:default => 60
     config_param :read_timeout, :integer,:default => 60
     config_param :message_properties, :hash, :default => nil
@@ -33,7 +35,7 @@ module Fluent::Plugin
         raise NotImplementedError
       else
         require_relative 'azureeventhubs/http'
-        @sender = AzureEventHubsHttpSender.new(@connection_string, @hub_name, @expiry_interval,@proxy_addr,@proxy_port,@open_timeout,@read_timeout)
+        @sender = AzureEventHubsHttpSender.new(@connection_string, @hub_name, @expiry_interval,@proxy_addr,@proxy_port,@proxy_user,@proxy_pass@open_timeout,@read_timeout)
       end
       raise Fluent::ConfigError, "'tag' in chunk_keys is required." if not @chunk_key_tag
     end
