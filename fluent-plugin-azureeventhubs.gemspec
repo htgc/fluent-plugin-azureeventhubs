@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "fluent-plugin-azureeventhubs"
-  spec.version       = "0.0.6"
+  spec.version       = "0.0.7"
   spec.authors       = ["Hidemasa Togashi", "Toddy Mladenov", "Justin Seely"]
   spec.email         = ["togachiro@gmail.com", "toddysm@gmail.com"]
   spec.summary       = "Fluentd output plugin for Azure Event Hubs"
