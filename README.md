@@ -36,6 +36,9 @@ Or install it yourself as:
   read_timeout     <Integer>   # HTTP Read timeout in seconds[Optional: default => 60]
   open_timeout     <Integer>   # HTTP Open timeout in seconds[Optional: default => 60]
   message_properties <Json Object> # A json object of key/value pairs to add Properties to the events being sent to EventHubs [Optional: default => nil]
+  batch             (true|false) # true: Send a collection of records to Event Hubs instead of one message per record. [Optional: default => false]
+  max_batch_size    <Integer> # The max number of records to send in a single message to Event Hubs. [Optional: default => 20]
+  print_records     (true|false) # true: Print each record as it is processed. [Optional: default => true]
 </match>
 ```
 
