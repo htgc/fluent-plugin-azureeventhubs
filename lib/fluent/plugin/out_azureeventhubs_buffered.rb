@@ -19,6 +19,9 @@ module Fluent::Plugin
     config_param :open_timeout, :integer,:default => 60
     config_param :read_timeout, :integer,:default => 60
     config_param :message_properties, :hash, :default => nil
+    config_param :batch, :bool, :default => false
+    config_param :max_batch_size, :integer,:default => 20
+    config_param :print_records, :bool, :default => true
 
     config_section :buffer do
       config_set_default :@type, DEFAULT_BUFFER_TYPE
@@ -48,16 +51,43 @@ module Fluent::Plugin
     end
 
     def write(chunk)
+      @batch ? write_batched(chunk) : write_singularly(chunk)
+    end
+
+    def write_singularly(chunk)
       chunk.msgpack_each { |tag, time, record|
-        p record.to_s
-        if @include_tag
-          record['tag'] = tag
+        if @print_records
+          p record.to_s
         end
-        if @include_time
-          record[@tag_time_name] = time
-        end
+        enrich_record(tag, time, record)
         @sender.send_w_properties(record, @message_properties)
       }
+    end
+
+    def write_batched(chunk)
+      records = []
+      chunk.msgpack_each { |tag, time, record|
+        if @print_records
+          p record.to_s
+        end
+        enrich_record(tag, time, record)
+
+        records << record
+      }
+
+      records.each_slice(@max_batch_size).each { |group| 
+        payload = { "records" => group }
+        @sender.send_w_properties(payload, @message_properties)
+      }
+    end
+
+    def enrich_record(tag, time, record)
+      if @include_tag
+        record['tag'] = tag
+      end
+      if @include_time
+        record[@tag_time_name] = time
+      end
     end
   end
 end
