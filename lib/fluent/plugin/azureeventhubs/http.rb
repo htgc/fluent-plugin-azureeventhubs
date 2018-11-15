@@ -7,6 +7,7 @@ class AzureEventHubsHttpSender
     require 'json'
     require 'cgi'
     require 'time'
+    require 'httpclient'
     @connection_string = connection_string
     @hub_name = hub_name
     @expiry_interval = expiry
@@ -29,6 +30,13 @@ class AzureEventHubsHttpSender
       end
     end
     @uri = URI.parse("#{@endpoint}#{@hub_name}/messages")
+
+    if (proxy_addr.to_s.empty?)
+      @client = HTTPClient.new
+    else
+      proxy_url = "#{proxy_addr}:#{proxy_port}"
+      @client = HTTPClient.new(proxy)
+    end
   end
 
   def generate_sas_token(uri)
@@ -56,19 +64,8 @@ class AzureEventHubsHttpSender
     if not properties.nil?
       headers = headers.merge(properties)
     end
-    if (@proxy_addr.to_s.empty?)
-    	https = Net::HTTP.new(@uri.host, @uri.port)
-        https.open_timeout = @open_timeout
-        https.read_timeout = @read_timeout
-    else
-    	https = Net::HTTP.new(@uri.host, @uri.port,@proxy_addr,@proxy_port)
-        https.open_timeout = @open_timeout
-        https.read_timeout = @read_timeout
-    end
-    https.use_ssl = true
-    req = Net::HTTP::Post.new(@uri.request_uri, headers)
-    req.body = payload.to_json
-    res = https.request(req)
-    rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Errno::ETIMEDOUT, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+    body = payload.to_json
+    res = @client.post(@uri.to_s, body, headers)
+    rescue HTTPClient::TimeoutError, Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Errno::ETIMEDOUT, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
   end
 end
