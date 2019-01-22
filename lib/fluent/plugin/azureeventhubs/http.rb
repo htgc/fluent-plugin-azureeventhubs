@@ -1,6 +1,6 @@
 
 class AzureEventHubsHttpSender
-  def initialize(connection_string, hub_name, expiry=3600,proxy_addr='',proxy_port=3128,open_timeout=60,read_timeout=60)
+  def initialize(connection_string,hub_name,expiry=3600,proxy_addr='',proxy_port=3128,open_timeout=60,read_timeout=60)
     require 'openssl'
     require 'base64'
     require 'net/http'
@@ -15,7 +15,7 @@ class AzureEventHubsHttpSender
     @open_timeout = open_timeout
     @read_timeout = read_timeout
 
-    if @connection_string.count(';') != 2
+    if @connection_string.count(';') > 3
       raise "Connection String format is not correct"
     end
 
@@ -26,8 +26,15 @@ class AzureEventHubsHttpSender
         @sas_key_name = part[20..-1]
       elsif ( part.index('SharedAccessKey') == 0 )
         @sas_key_value = part[16..-1]
+      elsif ( part.index('EntityPath') == 0 )
+        @hub_name = part[11..-1]
       end
     end
+
+    if [@endpoint, @sas_key_name, @sas_key_value, @hub_name].any?{|v| v == nil || v == "" }
+      raise "Connection String is missing required information"
+    end
+
     @uri = URI.parse("#{@endpoint}#{@hub_name}/messages")
   end
 
