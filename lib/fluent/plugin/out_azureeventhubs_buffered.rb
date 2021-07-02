@@ -75,9 +75,8 @@ module Fluent::Plugin
         records << record
       }
 
-      records.each_slice(@max_batch_size).each { |group| 
-        payload = { "records" => group }
-        @sender.send_w_properties(payload, @message_properties)
+      records.each_slice(@max_batch_size).each { |batch|
+        @sender.send_w_properties(batch, @message_properties)
       }
     end
 
